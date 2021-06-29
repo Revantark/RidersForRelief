@@ -1,21 +1,22 @@
 import React from 'react';
 import './App.css'
-import { AuthProvider } from './components/context/auth/authProvider';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
-import InitialHomeRouting from './components/home/initial_home/initialHomeRouting';
-import PlacedRequest from './components/requester/my_requests/placed_request';
+// import {
+//   BrowserRouter as Router,
+//   Switch,
+//   Route,
+// } from "react-router-dom";
+// import { AuthProvider } from './components/context/auth/authProvider';
 
+// import InitialHomeRouting from './components/home/initial_home/initialHomeRouting';
+import Test from './components/rider/profile/editRiderProfile'
 
 function App() {
   //todo
 
   return (
-    <div className="App">        
-      <AuthProvider>
+    <div className="App">   
+
+      {/* <AuthProvider>
         <Router>
           <Switch>
           
@@ -27,7 +28,9 @@ function App() {
             </Route>
           </Switch>
         </Router>
-      </AuthProvider>
+      </AuthProvider> */}
+      <Test/>
+
     </div>
   );
 }
