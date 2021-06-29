@@ -5,10 +5,11 @@ import axios from 'axios';
 import InputField from "../../global_ui/input";
 import Navbar from "../../global_ui/nav";
 import { useHistory } from 'react-router';
+import Dialog from '../../global_ui/dialog/dialog';
 
 const EditRiderProfile = () => {
   const history = useHistory();
-  const [error, setError] = useState(null);
+  const [requestError, setRequestError] = useState(null);
   const token = localStorage.getItem('token')
 
   const [data, setData] = useState({
@@ -17,107 +18,83 @@ const EditRiderProfile = () => {
     phoneNumber:"",       
   });    
 
-  const [errors, setErrors] = useState({        
-      fullName :"",
-      phoneNumber:"",
-      yearOfBirth:"",       
-      showError: false
-  });
-
-  async function updateRiderProfile() {
-    const options = {
-      headers: {
-          'authorization': 'Bearer ' + token
-      }
-    } 
-    try {
-      const response = await  axios.put('http://localhost:8000/rider/profile',options)
-      .then(response => setData(response.data)); 
-      console.log(response);
-    } 
-    catch (error) {
-      console.error(error);
-      setError(error);
-      }
-   } 
+  const [fullNameError, setfullNameError] = useState(null);
+  const [phoneNumberError, setphoneNumberError] = useState(null);
     
-    function submit(event) {
-      event.preventDefault();
-      console.log(event);
-      
-      validateName("submit");
-      setErrors({
-        ...errors,
-        showErrors: true,
-      });
+
+  function updateProfile() {
+    const options={
+     headers: {
+       'authorization': 'Bearer ' + token
+   }
     }
+    axios.put('http://localhost:8000/rider/profile',options)
+   
+    .then(response =>setData(response.data))
+    .catch((error)=>{
+      setRequestError(error)
+    })
+ }
+ const submit = async(event)=>{
+   event.preventDefault();
+   const d= data;
+   validateName({target:{value:d.fullName}})
+   validatePhNumber({target:{value:d.phoneNumber}})
+   console.log(fullNameError||phoneNumberError)
+   if(fullNameError||phoneNumberError)
+   console.log(fullNameError,phoneNumberError)
+ 
+ else
+ { updateProfile()}
+ }
   
-    const validatePhNumber = (e) => {
-      const phoneNumber = e.target.value;
-      setErrors({
-        ...errors,
-        phoneNumber: null,
-      });
-      const regE = /^[6-9]\d{9}$/;
-      if (phoneNumber.length > 10) {
-        setErrors({
-          ...errors,
-          showErrors: true,
+ const validatePhNumber = (e) => {
+  const phoneNumber = e.target.value;
+  const regE = /^[6-9]\d{9}$/;
+  if (phoneNumber.length > 10) {
+    setphoneNumberError(
+      "Phone number exceeds 10 digits"
+      );
+  } else if (!regE.test(phoneNumber)) {
+    setphoneNumberError(
+      "Please enter a valid number"
+      );
+  } else {
+    setphoneNumberError(
+      null
+    );
+  }
+  setData({
+    ...data,
+    phoneNumber: e.target.value,
+  });
+};
   
-          phoneNumber: "Phone number exceeds 10 digits",
-        });
-      } else if (!regE.test(phoneNumber)) {
-        setErrors({
-          ...errors,
-          phoneNumber: "Please enter a valid number",
-        });
-      } else {
-        setErrors({
-          ...errors,
-          phoneNumber: null,
-        });
-      }
-      setData({
-        ...data,
-        phoneNumber: e.target.value,
-      });
-    };
-  
-    const validateName = (e) => {
-      const fullName = e.target.value;
-      setErrors({
-        ...errors,
-        fullName:null
-      })
-      if (fullName === "") {
-        setErrors({
-          ...errors,
-  
-          fullName: "Please enter your name",
-        });
-      } else if (!/^[a-zA-Z]*$/.test(fullName)) {
-        setErrors({
-          ...errors,
-  
-          fullName: "Please enter a valid name",
-        });
-      } else if (fullName.length < 3) {
-        setErrors({
-          ...errors,
-  
-          fullName: "Name must be atleast 3 characters!",
-        });
-      } else {
-        setErrors({
-          ...errors,
-          fullName:null,
-        });
-      }
-      setData({
-        ...data,
-        fullName: e.target.value,
-      });
-    };   
+const validateName = (e) => {
+  const fullName = e.target.value;
+  if (fullName === "") {
+    setfullNameError(
+      "Please enter your name"
+ );
+  } else if (!/^[a-zA-Z]*$/.test(fullName)) {
+    setfullNameError(
+      "Please enter a valid name"
+    );
+  } else if (fullName.length < 3) {
+    setfullNameError(
+      "Name must be atleast 3 characters!"
+   );
+  } else {
+    setfullNameError(
+      null
+    );
+  }
+  setData({
+    ...data,
+    fullName: e.target.value,
+  });
+};
+
 
     return (        
         <div className={styles.riderProfileContainer}>
@@ -127,6 +104,7 @@ const EditRiderProfile = () => {
             backStyle={{ color: 'white' }} 
             title="My Account" titleStyle={{ color: 'white' }} 
             style={{ backgroundColor: '#79CBC5', marginBottom: "8px" }} />          
+                 <Dialog isShowing={requestError} onOK={()=>setRequestError()} />
 
             <form className={styles.form} onSubmit={submit}> 
                 <img className={styles.profileImage}></img>
