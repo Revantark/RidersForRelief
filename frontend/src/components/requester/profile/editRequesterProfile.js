@@ -1,30 +1,14 @@
 import React from 'react';
-import {useState} from "react";
+import {useState,useEffect} from "react";
 import axios from 'axios'
 import styles from "./editRequesterProfile.module.css";
 import InputField from "../../global_ui/input";
 import Navbar from "../../global_ui/nav";
 import { useHistory } from 'react-router-dom';
 import Dialog from '../../global_ui/dialog/dialog';
+import TextArea from '../../global_ui/textarea/textArea'
 
 const EditRequesterProfile = () => {
-  //pass a prop here to get data
-
-  const history = useHistory();
-  const token = localStorage.getItem('token')
-  const [requestError, setRequestError] = useState(null); 
-
-  //use when you pass prop
-  // const [data, setData] = useState({
-  //   profilePhoto:profile.profilePhoto ,
-  //   fullName :profile.fullName,
-  //   phoneNumber:profile.phoneNumber,
-  //   yearOfBirth:profile.yearOfBirth,
-  //   address:profile.address,
-  //   city:profile.city,
-  //   pincode:profile.pincode,
-  // });
-
   const [data, setData] = useState({
     profilePhoto:"" ,
     fullName :"",
@@ -35,6 +19,10 @@ const EditRequesterProfile = () => {
     pincode:"",
   });
 
+  //const history = useHistory();
+  const token = localStorage.getItem('token')
+  const [requestError, setRequestError] = useState(null); 
+
   const [fullNameError, setfullNameError] = useState(null);
   const [phoneNumberError, setphoneNumberError] = useState(null);
   const [yearOfBirthError, setyearOfBirthError] = useState(null);
@@ -42,8 +30,18 @@ const EditRequesterProfile = () => {
   const [cityError, setcityError] = useState(null);
   const [pincodeError, setpincodeError] = useState(null);
 
+  //pass a prop here to get data
+  //use when you pass prop
+  // const [data, setData] = useState({
+  //   profilePhoto:profile.profilePhoto ,
+  //   fullName :profile.fullName,
+  //   phoneNumber:profile.phoneNumber,
+  //   yearOfBirth:profile.yearOfBirth,
+  //   address:profile.address,
+  //   city:profile.city,
+  //   pincode:profile.pincode,
+  // });
   
-
   function updateProfile() {
     const options = {
       headers: {
@@ -57,63 +55,71 @@ const EditRequesterProfile = () => {
     })    
   }
 
+  function validateAll(d) {
+      if(
+        validateCity({target:{value:d.city}})& 
+        validateName({target:{value:d.fullName}})&
+        validatePincode({target:{value:d.city}})&
+        validateYear({target:{value:d.yearOfBirth}})&
+        validatePhNumber({target:{value:d.phoneNumber}})&
+        validateAddress({target:{value:d.address}})
+      ){
+        return true
+      }
+      return false    
+    }
+
     const submit = async(event)=> {
-      event.preventDefault();
-      const d=data;      
-      validateCity({target:{value:d.city}})
-      validateName({target:{value:d.fullName}})
-      validatePincode({target:{value:d.city}})
-      validateYear({target:{value:d.yearOfBirth}})
-      validatePhNumber({target:{value:d.phoneNumber}})
-      validateAddress({target:{value:d.address}})
-      
-      console.log(cityError||phoneNumberError || pincodeError || fullNameError || yearOfBirthError ||addressError);
-
-
-      if(cityError||phoneNumberError || pincodeError || fullNameError || yearOfBirthError ||addressError){
-        console.log(cityError,phoneNumberError,pincodeError,fullNameError,yearOfBirthError,addressError);
+      event.preventDefault();  
+      if(validateAll(data)){
+        console.log("Come on ");
+        updateProfile();
       }
       else{
-        updateProfile();
-      }    
+        console.log("Update Failed");
+      }             
     }
   
     const validatePhNumber = (e) => {
       const phoneNumber = e.target.value;
       const regE = /^[6-9]\d{9}$/;
+      let flag=false;
 
       if (phoneNumber.length > 10) {
         setphoneNumberError(
-          "Phone number exceeds 10 digits"
+          "Mobile Number exceeds 10 digits"
           );
       } 
       else if (!regE.test(phoneNumber)) {
         setphoneNumberError(
-          "Please enter a valid number"
+          "Enter a valid Mobile Number"
           );
       } 
       else {
         setphoneNumberError(
           null
         );
+        flag=true;
       }
       setData({
         ...data,
         phoneNumber: e.target.value,
       });
+      return flag;
     };
   
     const validateName = (e) => {
       const fullName = e.target.value;
+      let flag=false;
 
       if (fullName === "") {
         setfullNameError(
-           "Please enter your name"
+           "Name cannot be Empty"
       );
       } 
       else if (!/^[a-zA-Z]*$/.test(fullName)) {
         setfullNameError(
-          "Please enter a valid name"
+          "Name must contain only alphabets"
         );
       } 
       else if (fullName.length < 3) {
@@ -125,15 +131,18 @@ const EditRequesterProfile = () => {
         setfullNameError(
           null
         );
+        flag=true
       }      
       setData({
         ...data,
         fullName: e.target.value,
       });
+      return flag;
     };
 
     const validateAddress = (e) => { 
       const address = e.target.value;
+      let flag=false;
       
       if(address===""){
         setaddressError(
@@ -144,38 +153,45 @@ const EditRequesterProfile = () => {
         setaddressError(
           null
         )
+        flag=true
       }      
       setData({
           ...data,
           address: e.target.value
       })
+      return flag;
     };
 
     const validateCity = (e) => {
       const city = e.target.value;
+      let flag=false;
 
       if(city===""){
         setcityError(
-          "City field cannot be Empty"
+          "City Name cannot be Empty"
         )
       }  
       else{
         setcityError(
           null
         )
+        flag=true
       }     
       setData({
           ...data,
           city: city
       })
+      return flag;
     };
 
     const validatePincode = (e) => {
       const pincode = e.target.value;
+      let flag=false;
+
 
        if (pincode === "") {
           setpincodeError(
-           "Please enter Pincode"
+           "Pincode cannot be empty"
           );
         }
         else if(pincode.length>6){
@@ -190,15 +206,17 @@ const EditRequesterProfile = () => {
         } 
         else {
           setpincodeError(null);
+          flag=true
         } 
         setData({
             ...data,
             pincode: e.target.value,
         });
+        return flag;
     };
   
     const validateYear = (e) => {
-      // console.log(new Date().getFullYear() - 100);
+      let flag=false;
       const year = e.target.value;
       const cyear = new Date().getFullYear();
   
@@ -226,11 +244,13 @@ const EditRequesterProfile = () => {
         setyearOfBirthError(  
           null
        );
+       flag=true
       }
       setData({
         ...data,
         yearOfBirth: e.target.value,
       });
+      return flag;
     };
 
     return (        
@@ -244,8 +264,7 @@ const EditRequesterProfile = () => {
                 
                 <img className={styles.profileImage}></img>
 
-                <InputField 
-                
+                <InputField                 
                 value={data.fullName}
                 type = "text"
                 maxLength ="40"
@@ -253,6 +272,7 @@ const EditRequesterProfile = () => {
                 error={fullNameError?fullNameError:null}
                 onChange={validateName}                
                 />
+
                 <InputField
                 value={data.phoneNumber}
                 type="number"
@@ -261,6 +281,7 @@ const EditRequesterProfile = () => {
                 error={ phoneNumberError  ? phoneNumberError : null}
                 onChange={validatePhNumber}            
                 />
+
                 <InputField
                 value={data.yearOfBirth}
                 type="number"
@@ -272,9 +293,10 @@ const EditRequesterProfile = () => {
 
                 <div className={styles.address}>
                     <div className={styles.completeAddress}>
-                        <InputField                
+                        <TextArea                
                         value={data.address}
                         placeholder="Address"
+                        rows="3"
                         onChange={validateAddress}
                         error={ addressError ? addressError :null}
                         />

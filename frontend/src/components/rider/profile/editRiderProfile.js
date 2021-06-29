@@ -41,13 +41,14 @@ const EditRiderProfile = () => {
    const d= data;
    validateName({target:{value:d.fullName}})
    validatePhNumber({target:{value:d.phoneNumber}})
-   console.log(fullNameError||phoneNumberError)
-   if(fullNameError||phoneNumberError)
-   console.log(fullNameError,phoneNumberError)
- 
- else
- { updateProfile()}
- }
+   console.log(10,fullNameError);
+   if(fullNameError||phoneNumberError){
+    console.log(fullNameError,phoneNumberError) 
+   }
+   else{ 
+     updateProfile()
+    }
+  }
   
  const validatePhNumber = (e) => {
   const phoneNumber = e.target.value;

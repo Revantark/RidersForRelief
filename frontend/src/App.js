@@ -8,7 +8,7 @@ import './App.css'
 // import { AuthProvider } from './components/context/auth/authProvider';
 
 // import InitialHomeRouting from './components/home/initial_home/initialHomeRouting';
-import Test from './components/rider/profile/editRiderProfile'
+import Test from './components/requester/profile/editRequesterProfile'
 
 function App() {
   //todo
