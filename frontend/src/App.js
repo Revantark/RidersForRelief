@@ -1,13 +1,14 @@
 import React from 'react';
 import './App.css'
-import { AuthProvider } from './components/context/auth/authProvider';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
-import InitialHomeRouting from './components/home/initial_home/initialHomeRouting';
-import PlacedRequest from './components/requester/my_requests/placed_request';
+// import { AuthProvider } from './components/context/auth/authProvider';
+// import {
+//   BrowserRouter as Router,
+//   Switch,
+//   Route,
+// } from "react-router-dom";
+// import InitialHomeRouting from './components/home/initial_home/initialHomeRouting';
+// import PlacedRequest from './components/requester/my_requests/placed_request';
+import Xx from './components/requester/profile/editRequesterProfile'
 
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
 
   return (
     <div className="App">        
-      <AuthProvider>
+      {/* <AuthProvider>
         <Router>
           <Switch>
           
@@ -27,7 +28,8 @@ function App() {
             </Route>
           </Switch>
         </Router>
-      </AuthProvider>
+      </AuthProvider> */}
+      <Xx/>
     </div>
   );
 }

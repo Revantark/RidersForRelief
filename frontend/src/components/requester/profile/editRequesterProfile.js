@@ -41,9 +41,7 @@ const EditRequesterProfile = () => {
   const [addressError, setaddressError] = useState(null);
   const [cityError, setcityError] = useState(null);
   const [pincodeError, setpincodeError] = useState(null);
-
   
-
   function updateProfile() {
     const options = {
       headers: {
@@ -71,7 +69,7 @@ const EditRequesterProfile = () => {
 
 
       if(cityError||phoneNumberError || pincodeError || fullNameError || yearOfBirthError ||addressError){
-        console.log(cityError,phoneNumberError,pincodeError,fullNameError,yearOfBirthError,addressError);
+        console.log(10,cityError,phoneNumberError,pincodeError,fullNameError,yearOfBirthError,addressError);
       }
       else{
         updateProfile();
