@@ -1,37 +1,27 @@
-import React from 'react'
-import './aboutStyles.css'
+import React,{useEffect} from 'react'
+import styles from  './aboutStyles.module.css'
+import Navbar from '../global_ui/nav'
 
 function About() {
+    useEffect(() => {
+        
+        
+    }, [])
     return (
         <div
-        className="about"        
+        className={styles.about}        
         >
-            <nav 
-            style={{
-                backgroundColor:'darkgreen',
-                width:'100%',
-                height:'60px',
-                textAlign:'center',
-                display:'grid',
-                alignContent:'center',
-                alignItems:'center',
-                fontSize:'20px',
-                color:'white'
-            }}>
-                <span>
-                   About Us
-                </span>
-            </nav> 
+            <Navbar title="About" style={{backgroundColor:'#79CBC5',color:'black' }}/>            
 
-            <p
-            className="quoted-text">
+            <q
+            className={styles.quotedText}>
             Lorem ipsum dolor sit amet consectetur ipsum!
-            </p>                  
+            </q>                  
 
             <section 
-            className="aboutContent"
+            className={styles.aboutContent}
             style={{
-                backgroundImage: "url('/assets/blurredlogo.png')" ,
+                backgroundImage: `url('/assets/blurredlogo.png')` ,
                 backgroundSize:'contain',
                 backgroundRepeat:'no-repeat',
                 backgroundPosition:'center',
@@ -55,12 +45,12 @@ function About() {
             </section>
 
             <section style={{ height:'400px'}} >
-            <div className="founderNote">
-                <div className="founderContent">
+            <div className={styles.founderNote}>
+                <div className={styles.founderContent}>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid nostrum repudiandae eum corrupti, nisi, earum recusandae rerum dolore minima suscipit saepe dolores, quas quisquam praesentium. Dolorum totam consequuntur illum nemo?
                 </div>
                 <img 
-                className="founderImg"
+                className={styles.founderImg}
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNEr-saR2xBf7GrT5wx3oL_o8M-ZodrZtDnQ&usqp=CAU" alt="" />
 
             

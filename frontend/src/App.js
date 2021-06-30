@@ -6,8 +6,8 @@ import {
   Route,
 } from "react-router-dom";
 import { AuthProvider } from './components/context/auth/authProvider';
-
 import InitialHomeRouting from './components/home/initial_home/initialHomeRouting';
+import About from './components/about/about';
 // import Test from './components/requester/profile/editRequesterProfile'
 
 function App() {
@@ -21,8 +21,8 @@ function App() {
           <Switch>
           
             <Route path="/about">
-            <h1>About Page</h1>
-          </Route>
+              <About/>
+            </Route>
             <Route path="/">
               <InitialHomeRouting />
             </Route>
