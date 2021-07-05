@@ -21,7 +21,7 @@ const EditRiderProfile = () => {
 
   const [fullNameError, setfullNameError] = useState(null);
   const [phoneNumberError, setphoneNumberError] = useState(null);
-    
+ 
 
   function updateProfile() {
     const options={
@@ -39,8 +39,10 @@ const EditRiderProfile = () => {
  const submit = async(event)=>{
    event.preventDefault();
    const d= data;
+   
    validateName({target:{value:d.fullName}})
    validatePhNumber({target:{value:d.phoneNumber}})
+<<<<<<< HEAD
    console.log(10,fullNameError);
    if(fullNameError||phoneNumberError){
     console.log(fullNameError,phoneNumberError) 
@@ -49,6 +51,15 @@ const EditRiderProfile = () => {
      updateProfile()
     }
   }
+=======
+ 
+
+if(!phoneNumberError&&!fullNameError)
+ {
+    updateProfile();}
+
+ }
+>>>>>>> Pranchal15-test
   
  const validatePhNumber = (e) => {
   const phoneNumber = e.target.value;
@@ -61,15 +72,19 @@ const EditRiderProfile = () => {
     setphoneNumberError(
       "Please enter a valid number"
       );
-  } else {
+  } 
+  else {
     setphoneNumberError(
       null
-    );
-  }
+      );
+    }
+    
   setData({
     ...data,
     phoneNumber: e.target.value,
   });
+  
+  
 };
   
 const validateName = (e) => {
@@ -86,15 +101,19 @@ const validateName = (e) => {
     setfullNameError(
       "Name must be atleast 3 characters!"
    );
-  } else {
-    setfullNameError(
-      null
-    );
-  }
-  setData({
-    ...data,
+    }
+   else {
+     setfullNameError(
+       null
+       );
+      }
+    
+    
+      setData({
+        ...data,
     fullName: e.target.value,
   });
+  
 };
 
 

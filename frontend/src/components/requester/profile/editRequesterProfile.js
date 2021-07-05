@@ -4,11 +4,31 @@ import axios from 'axios'
 import styles from "./editRequesterProfile.module.css";
 import InputField from "../../global_ui/input";
 import Navbar from "../../global_ui/nav";
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import Dialog from '../../global_ui/dialog/dialog';
 import TextArea from '../../global_ui/textarea/textArea'
 
 const EditRequesterProfile = () => {
+<<<<<<< HEAD
+=======
+  //pass a prop here to get data
+
+  // const history = useHistory();
+  const token = localStorage.getItem('token')
+  const [requestError, setRequestError] = useState(null); 
+
+  //use when you pass prop
+  // const [data, setData] = useState({
+  //   profilePhoto:profile.profilePhoto ,
+  //   fullName :profile.fullName,
+  //   phoneNumber:profile.phoneNumber,
+  //   yearOfBirth:profile.yearOfBirth,
+  //   address:profile.address,
+  //   city:profile.city,
+  //   pincode:profile.pincode,
+  // });
+
+>>>>>>> Pranchal15-test
   const [data, setData] = useState({
     profilePhoto:"" ,
     fullName :"",
@@ -29,6 +49,7 @@ const EditRequesterProfile = () => {
   const [addressError, setaddressError] = useState(null);
   const [cityError, setcityError] = useState(null);
   const [pincodeError, setpincodeError] = useState(null);
+<<<<<<< HEAD
 
   //pass a prop here to get data
   //use when you pass prop
@@ -41,6 +62,8 @@ const EditRequesterProfile = () => {
   //   city:profile.city,
   //   pincode:profile.pincode,
   // });
+=======
+>>>>>>> Pranchal15-test
   
   function updateProfile() {
     const options = {
@@ -69,11 +92,16 @@ const EditRequesterProfile = () => {
       return false    
     }
 
+<<<<<<< HEAD
     const submit = async(event)=> {
       event.preventDefault();  
       if(validateAll(data)){
         console.log("Come on ");
         updateProfile();
+=======
+      if(cityError||phoneNumberError || pincodeError || fullNameError || yearOfBirthError ||addressError){
+        console.log(10,cityError,phoneNumberError,pincodeError,fullNameError,yearOfBirthError,addressError);
+>>>>>>> Pranchal15-test
       }
       else{
         console.log("Update Failed");
