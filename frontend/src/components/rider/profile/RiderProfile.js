@@ -2,17 +2,15 @@ import React from 'react';
 import Navbar from '../../global_ui/nav';
 import styles from "./RiderProfile.module.css"
 import axios from 'axios';
-//import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import Button from '../../global_ui/buttons/button'
-
-import Dialog from '../../global_ui/dialog/dialog';
-
+import Button from '../../global_ui/buttons/button';
+import {Dialog} from '../../global_ui/dialog/dialog';
 import {LoadingScreen} from '../../global_ui/spinner';
 
 const RiderProfile=()=>{
-    //const history = useHistory();
-    const [data, setData] = useState({name:'',mobile:''});
+    const history = useHistory();
+    const [data, setData] = useState({name:'',mobile:'',profileUrl:''});
     const [error, setError] = useState(null);
     const token = localStorage.getItem('token');
     const [isLoaded, setisLoaded] = useState(false);
@@ -27,7 +25,11 @@ const RiderProfile=()=>{
             }
             axios.get('http://localhost:8000/rider/profile',options)
             .then(response => {
-                setData(response.data.message.name)
+                setData({
+                    name:response.data.message.name,
+                    mobile:response.data.message.mobile,
+                    profileUrl:response.data.message.profileUrl
+                })
                 setisLoaded(true);
                 setError(null)
             }, error => {
@@ -40,47 +42,25 @@ const RiderProfile=()=>{
     return (
         isLoaded?
         (
-            error ? <Dialog
+            error? 
+            <Dialog
              isShowing={error} 
-<<<<<<< HEAD
-             onOK={() => { 
-                //  history.push("/home/rider") 
-                setError(false)
-                }} 
-            msg = {"An Error occured "}/>
-            : 
-            <div className={styles.riderProfileContainer}>
-                <Navbar back={true} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
-                <img className={styles.profileImage}></img>
-                <label>Full Name:</label>
-                <span className="name" >
-                {data.name}
-                </span>
-                <label>Phone Number:</label>
-                <span className="phoneNumber">
-                {data.phoneNumber}
-                </span>
-                
-                <Button  
-                bgColor="green"
-                isRounded="true"
-                text="EDIT"
-                fontSize="17px"
-                />           
-=======
-             onOK={() => { history.push("/home/rider") 
-            setError(false)
-         }} 
-         
-         msg = {"An Error occured "}/>
-         : 
+             onOK={() => { history.push("/my_profile") 
+             setError(false)
+            }}
+             msg = {error}/>
+        : 
         <div className={styles.riderProfileContainer}>
+
             <Navbar back={true} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
-            <img>className=profileImage</img>
+            
+            <img className={styles.profileImage} src={data.profileUrl}></img>
+            
             <label>Full Name:</label>
             <span className={styles.name} >
                {data.name}
             </span>
+            
             <label>Phone Number:</label>
             <span className={styles.phoneNumber}>
                {data.phoneNumber}
@@ -91,10 +71,10 @@ const RiderProfile=()=>{
              isRounded="true"
              text="EDIT"
              fontSize="17px"
-         />           
->>>>>>> Pranchal15-test
+             onClick={history.push('/edit_profile')}
+            />           
     
-            </div>
+        </div>
         )
         : 
         <LoadingScreen/>

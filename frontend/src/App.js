@@ -8,11 +8,13 @@ import {
 } from "react-router-dom";
 import InitialHomeRouting from './components/home/initial_home/initialHomeRouting';
 import UploadImages from './components/requester/new_request/upload_images';
+
+
 function App() {
   //todo
 
   return (
-    <div className="App">        
+    <div className="App"> 
       <AuthProvider>
         <Router>
           <Switch>
@@ -25,11 +27,7 @@ function App() {
             </Route>
           </Switch>
         </Router>
-<<<<<<< HEAD
       </AuthProvider>      
-=======
-      </AuthProvider>
->>>>>>> 92be79c6ff34d117463db5071a722e80e49c626c
     </div>
   );
 }

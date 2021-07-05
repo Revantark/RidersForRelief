@@ -4,31 +4,17 @@ import axios from 'axios'
 import styles from "./editRequesterProfile.module.css";
 import InputField from "../../global_ui/input";
 import Navbar from "../../global_ui/nav";
-// import { useHistory } from 'react-router-dom';
-import Dialog from '../../global_ui/dialog/dialog';
-import TextArea from '../../global_ui/textarea/textArea'
+import { useHistory } from 'react-router-dom';
+import {Dialog} from '../../global_ui/dialog/dialog';
+import TextArea from '../../global_ui/textarea/textArea';
+import {LoadingScreen} from '../../global_ui/spinner';
 
 const EditRequesterProfile = () => {
-<<<<<<< HEAD
-=======
-  //pass a prop here to get data
-
-  // const history = useHistory();
+  const history = useHistory();
   const token = localStorage.getItem('token')
-  const [requestError, setRequestError] = useState(null); 
+  const [requestError, setRequestError] = useState(null);
+  const [isProfileUpdated, setisProfileUpdated] = useState(false);
 
-  //use when you pass prop
-  // const [data, setData] = useState({
-  //   profilePhoto:profile.profilePhoto ,
-  //   fullName :profile.fullName,
-  //   phoneNumber:profile.phoneNumber,
-  //   yearOfBirth:profile.yearOfBirth,
-  //   address:profile.address,
-  //   city:profile.city,
-  //   pincode:profile.pincode,
-  // });
-
->>>>>>> Pranchal15-test
   const [data, setData] = useState({
     profilePhoto:"" ,
     fullName :"",
@@ -39,9 +25,8 @@ const EditRequesterProfile = () => {
     pincode:"",
   });
 
+  const [isLoaded, setisLoaded] = useState(false);
   //const history = useHistory();
-  const token = localStorage.getItem('token')
-  const [requestError, setRequestError] = useState(null); 
 
   const [fullNameError, setfullNameError] = useState(null);
   const [phoneNumberError, setphoneNumberError] = useState(null);
@@ -49,63 +34,87 @@ const EditRequesterProfile = () => {
   const [addressError, setaddressError] = useState(null);
   const [cityError, setcityError] = useState(null);
   const [pincodeError, setpincodeError] = useState(null);
-<<<<<<< HEAD
 
-  //pass a prop here to get data
-  //use when you pass prop
-  // const [data, setData] = useState({
-  //   profilePhoto:profile.profilePhoto ,
-  //   fullName :profile.fullName,
-  //   phoneNumber:profile.phoneNumber,
-  //   yearOfBirth:profile.yearOfBirth,
-  //   address:profile.address,
-  //   city:profile.city,
-  //   pincode:profile.pincode,
-  // });
-=======
->>>>>>> Pranchal15-test
+
+  useEffect(
+    async () => {
+        const options = {
+            headers: {
+                'authorization': 'Bearer ' + token
+            }
+        }
+        axios.get('http://localhost:8000/requester/profile',options)
+        .then(response => {
+            setData({
+                fullName:response.data.fullName,
+                phoneNumber:response.data.phoneNumber,
+                address:response.data.address,
+                city:response.data.city,
+                pincode:response.data.pincoode,
+                yearOfBirth:response.data.yearOfBirth,
+                profileURL:response.data.profileURL
+            });
+            setisLoaded(true);
+            setRequestError(null);
+        }, error => {
+            console.log("An error occured", error);
+            setRequestError(error.toString());
+            setisLoaded(true);
+        })
+    }, [])
+
+    async function showSnackBar() {
+      setTimeout(() => {
+        setisProfileUpdated(false)
+      }, 2000);    
+    }
   
-  function updateProfile() {
-    const options = {
-      headers: {
-          'authorization': 'Bearer ' + token
+    function updateProfile() {
+      setisLoaded(false)
+      const options = {
+        headers: {
+            'authorization': 'Bearer ' + token
+        }
       }
-    }
-    axios.put('http://localhost:8000/requester/profile',options)
-          .then(response => setData(response.data))
-          .catch((error)=>{
-          setRequestError(error)
-    })    
-  }
-
-  function validateAll(d) {
-      if(
-        validateCity({target:{value:d.city}})& 
-        validateName({target:{value:d.fullName}})&
-        validatePincode({target:{value:d.city}})&
-        validateYear({target:{value:d.yearOfBirth}})&
-        validatePhNumber({target:{value:d.phoneNumber}})&
-        validateAddress({target:{value:d.address}})
-      ){
-        return true
-      }
-      return false    
+      axios.put('http://localhost:8000/requester/profile',data,{options})
+            .then(
+              response => {
+                console.log(response);
+                setisLoaded(true);
+                setRequestError(null);
+                setisProfileUpdated(true);
+                showSnackBar();
+              })
+            .catch((error)=>{              
+            setRequestError(error.toString());
+            setisLoaded(true);
+      })    
     }
 
-<<<<<<< HEAD
+    function validateAll() {
+        const d=data;
+        if(
+          validateCity({target:{value:d.city}})& 
+          validateName({target:{value:d.fullName}})&
+          validatePincode({target:{value:d.pincode}})&
+          validateYear({target:{value:d.yearOfBirth}})&
+          validatePhNumber({target:{value:d.phoneNumber}})&
+          validateAddress({target:{value:d.address}})
+        ){
+          return true
+        }
+        return false    
+      }
+
     const submit = async(event)=> {
       event.preventDefault();  
-      if(validateAll(data)){
-        console.log("Come on ");
+      if(validateAll()){
         updateProfile();
-=======
-      if(cityError||phoneNumberError || pincodeError || fullNameError || yearOfBirthError ||addressError){
-        console.log(10,cityError,phoneNumberError,pincodeError,fullNameError,yearOfBirthError,addressError);
->>>>>>> Pranchal15-test
+
       }
       else{
         console.log("Update Failed");
-      }             
+      }           
     }
   
     const validatePhNumber = (e) => {
@@ -145,7 +154,7 @@ const EditRequesterProfile = () => {
            "Name cannot be Empty"
       );
       } 
-      else if (!/^[a-zA-Z]*$/.test(fullName)) {
+      else if (!/^[a-zA-Z .]*$/.test(fullName)) {
         setfullNameError(
           "Name must contain only alphabets"
         );
@@ -224,7 +233,7 @@ const EditRequesterProfile = () => {
         }
         else if(pincode.length>6){
             setpincodeError(
-                "Invalid Pincode!"
+                "Invalid Pincode!!"
             );
         }
         else if(pincode.length<6){
@@ -281,23 +290,45 @@ const EditRequesterProfile = () => {
       return flag;
     };
 
-    return (        
+    return (         
+        isLoaded?(  
+        requestError?
+        <Dialog
+        isShowing={requestError} 
+        onOK={() => {
+            setRequestError(false)
+            //history.push("/home/requester") 
+        }} 
+        msg={requestError} />
+        :       
         <div className={styles.requesterProfileContainer}>
+             {
+               isProfileUpdated &&
+               <nav style={{
+                 height:'30px',
+                 background:'grey',
+                 display:'flex',
+                 justifyContent:'center',
+                 alignItems:'center',
+                 width:'100%',
+                 padding:'0px',
+                 marginBottom:'-10px'
+                 }}>Profile Updated Successfully</nav>
+
+             }
 
             <Navbar back={true} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
-            
-            <Dialog isShowing={requestError} onOK={()=>setRequestError()} />
-            
+                        
             <form className={styles.editProfileForm} onSubmit={submit}>
                 
-                <img className={styles.profileImage}></img>
+                <img className={styles.profileImage} src={data.profilePhoto}></img>
 
                 <InputField                 
                 value={data.fullName}
                 type = "text"
                 maxLength ="40"
                 placeholder="Name"
-                error={fullNameError?fullNameError:null}
+                error={fullNameError}
                 onChange={validateName}                
                 />
 
@@ -306,7 +337,7 @@ const EditRequesterProfile = () => {
                 type="number"
                 maxLength="10"
                 placeholder="Mobile Number"
-                error={ phoneNumberError  ? phoneNumberError : null}
+                error={ phoneNumberError}
                 onChange={validatePhNumber}            
                 />
 
@@ -315,7 +346,7 @@ const EditRequesterProfile = () => {
                 type="number"
                 maxLength="4"
                 placeholder="Year Of Birth"
-                error={ yearOfBirthError ? yearOfBirthError : null}
+                error={ yearOfBirthError}
                 onChange={validateYear}
                 />
 
@@ -326,7 +357,7 @@ const EditRequesterProfile = () => {
                         placeholder="Address"
                         rows="3"
                         onChange={validateAddress}
-                        error={ addressError ? addressError :null}
+                        error={ addressError}
                         />
                     </div>
 
@@ -335,7 +366,7 @@ const EditRequesterProfile = () => {
                           value={data.city}
                           type="text"
                           placeholder="City"
-                          error={cityError? cityError : null}
+                          error={cityError}
                           onChange={validateCity}
                           />                        
                     </div>
@@ -345,7 +376,7 @@ const EditRequesterProfile = () => {
                         value={data.pincode}
                         type="number"
                         placeholder="Pincode"
-                        error={ pincodeError ? pincodeError:null}
+                        error={ pincodeError}
                         onChange={validatePincode}
                         />
                     </div>  
@@ -355,7 +386,10 @@ const EditRequesterProfile = () => {
               
             <button onClick={submit} className="submit">Save Changes</button>
 
-        </div>  
+        </div> 
+        
+        ):
+        <LoadingScreen /> 
         );
       };
   

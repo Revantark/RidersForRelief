@@ -11,6 +11,8 @@ import ChooseAddress from '../../requester/new_request/PinAddress';
 import UploadImages from '../../requester/new_request/upload_images';
 import ConfirmRequestGeneral from '../../requester/confirm_request/generalRequestConfirm';
 import ConfirmRequestPD from '../../requester/confirm_request/pdRequestConfirm';
+import RequesterProfile from '../../requester/profile/RequesterProfile'
+import EditRequesterProfile from '../../requester/profile/editRequesterProfile'
 
 const RequesterHomeRoutes = () => {
     return (
@@ -48,6 +50,12 @@ const RequesterHomeRoutes = () => {
             </Route>
             <Route path="/enter_items" >
                 <EnterItemsForm />
+            </Route>
+            <Route path="/my_profile">
+                <RequesterProfile />
+            </Route>
+            <Route path="/edit_profile">
+                <EditRequesterProfile />
             </Route>
             <Route path="/">
                 <RequesterHomeScreen />
