@@ -12,34 +12,30 @@ import UploadImages from '../../requester/new_request/upload_images';
 import ConfirmRequestGeneral from '../../requester/confirm_request/generalRequestConfirm';
 import ConfirmRequestPD from '../../requester/confirm_request/pdRequestConfirm';
 import RequesterProfile from '../../requester/profile/RequesterProfile'
-import EditRequesterProfile from '../../requester/profile/editRequesterProfile'
+import EditRequesterProfile from '../../requester/profile/EditRequesterProfile'
 
 const RequesterHomeRoutes = () => {
     return (
         <BrowserRouter basename="/home/requester" >
-        <Switch>
-            
+        <Switch>            
             
             <Route path="/my_requests" >
                 <MyRequestsRoutes />
-            </Route>
-            <Route path="/my_profile" >
-                MyProfileHere
             </Route>
             <Route path="/map_location" >
                 <Map />
             </Route>
             <Route path="/address" >
-                < ChooseAddress/>
+                <ChooseAddress/>
             </Route>
             <Route path="/add_image" >
-                < UploadImages/>
+                <UploadImages/>
             </Route>
             <Route path="/confirm_general" >
-                < ConfirmRequestGeneral/>
+                <ConfirmRequestGeneral/>
             </Route>
             <Route path="/confirm_pd" >
-                < ConfirmRequestPD/>
+                <ConfirmRequestPD/>
             </Route>
             
             <Route path="/new_request" >

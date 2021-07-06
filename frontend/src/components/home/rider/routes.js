@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 import RiderHome from './RiderHome';
 import RiderProfile from '../../rider/profile/RiderProfile'
-import EditRiderProfile from '../../rider/profile/RiderProfile'
+import EditRiderProfile from '../../rider/profile/editRiderProfile'
 
 const RiderHomeRoutes = () => {
     return ( 
