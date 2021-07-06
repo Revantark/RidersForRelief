@@ -10,7 +10,7 @@ import {LoadingScreen} from '../../global_ui/spinner';
 
 const RiderProfile=()=>{
     const history = useHistory();
-    const [data, setData] = useState({name:'',mobile:'',profileUrl:''});
+    const [data, setData] = useState({name:'',phoneNumber:'',profileUrl:''});
     const [error, setError] = useState(null);
     const token = localStorage.getItem('token');
     const [isLoaded, setisLoaded] = useState(false);
@@ -25,16 +25,21 @@ const RiderProfile=()=>{
             }
             axios.get('http://localhost:8000/rider/profile',options)
             .then(response => {
-                setData({
-                    name:response.data.message.name,
-                    mobile:response.data.message.mobile,
-                    profileUrl:response.data.message.profileUrl
-                })
-                setisLoaded(true);
-                setError(null)
+                console.log(response);
+                if(response.data.status==="success"){
+                    setData({
+                        name:response.data.result.name,
+                        phoneNumber:response.data.result.phoneNumber,
+                        profileUrl:response.data.message.profileUrl
+                    })
+                    setError(null)
+                }else{
+                    setError(response.data.message)
+                }                
+                setisLoaded(true);                
             }, error => {
                 console.log("An error occured", error);
-                setError(error.toString());
+                setError(error.message);
                 setisLoaded(true);
             })
     }, [])
@@ -52,7 +57,7 @@ const RiderProfile=()=>{
         : 
         <div className={styles.riderProfileContainer}>
 
-            <Navbar back={true} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
+            <Navbar back={"/"} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
             
             <img className={styles.profileImage} src={data.profileUrl}></img>
             
@@ -71,7 +76,7 @@ const RiderProfile=()=>{
              isRounded="true"
              text="EDIT"
              fontSize="17px"
-             onClick={history.push('/edit_profile')}
+             onClick={()=>history.push('/edit_profile')}
             />           
     
         </div>

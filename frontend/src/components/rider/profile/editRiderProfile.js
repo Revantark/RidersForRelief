@@ -1,5 +1,4 @@
-import React from 'react';
-import {useState,useEffect} from "react";
+import React,{useState,useEffect} from "react";
 import styles from "./editRiderProfile.module.css";
 import axios from 'axios';
 import InputField from "../../global_ui/input";
@@ -15,14 +14,15 @@ const EditRiderProfile = () => {
   const [isProfileUpdated, setisProfileUpdated] = useState(false);
 
   const [data, setData] = useState({
-    profileURL: '',
-    fullName :"",
+    profileURL:"",
+    name:"",
     phoneNumber:"",       
   });  
+
   const [fullNameError, setfullNameError] = useState(null);
   const [phoneNumberError, setphoneNumberError] = useState(null); 
 
-  async function showSnackBar() {
+  async function showSnackBar(){
     setTimeout(() => {
       setisProfileUpdated(false)
     }, 2000);    
@@ -30,7 +30,6 @@ const EditRiderProfile = () => {
 
   useEffect(
     async () => {
-        console.log(token)
         const options = {
             headers: {
                 'authorization': 'Bearer ' + token
@@ -38,16 +37,22 @@ const EditRiderProfile = () => {
         }
         axios.get('http://localhost:8000/rider/profile',options)
         .then(response => {
-            setData({
-                name:response.data.message.name,
-                mobile:response.data.message.mobile,
-                profileUrl:response.data.message.profileUrl
+            if(response.data.status==="success"){
+              console.log(response);
+              setData({
+                name:response.data.result.name,
+                phoneNumber:response.data.result.phoneNumber,
+                profileUrl:response.data.result.profileUrl
             })
+            setRequestError(null);
+            }
+            else{
+              setRequestError(response.data.message)
+            }            
             setisLoaded(true);
-            setRequestError(null)
         }, error => {
             console.log("An error occured", error);
-            setRequestError(error.toString());
+            setRequestError(error.message);
             setisLoaded(true);
         })
 }, [])
@@ -60,14 +65,19 @@ const EditRiderProfile = () => {
       }
     }
 
-    axios.put('http://localhost:8000/rider/profile',data,{options})   
+    axios.put('http://localhost:8000/rider/profile',data,options)   
     .then(response =>{
-      // setData(response.data)
       console.log(response);
-      setisLoaded(true);
-      setRequestError(null);
-      setisProfileUpdated(true);
-      showSnackBar();
+      if(response.data.status==="success"){
+        console.log("Profile Updated");
+        setRequestError(null);
+        setisProfileUpdated(true);
+        showSnackBar();
+      }
+      else{
+        setRequestError(response.data.message)
+      }
+      setisLoaded(true);    
 
       })
     .catch((error)=>{
@@ -80,12 +90,12 @@ const EditRiderProfile = () => {
    event.preventDefault();
    const d = data;
 
-   if(validateName({target:{value:d.fullName}}) & validatePhNumber({target:{value:d.phoneNumber}})){
+   if(validateName({target:{value:d.name}}) & validatePhoneNumber({target:{value:d.phoneNumber}})){
     updateProfile();
     }
   }
   
- const validatePhNumber = (e) => {
+ const validatePhoneNumber = (e) => {
    let flag=false;
   const phoneNumber = e.target.value;
   const regE = /^[6-9]\d{9}$/;
@@ -145,12 +155,10 @@ const validateName = (e) => {
     }   
   setData({
     ...data,
-    fullName: e.target.value,
+    name: e.target.value,
   }); 
   return flag 
 };
-
-
     return (    
       isLoaded?(
         requestError?
@@ -180,7 +188,7 @@ const validateName = (e) => {
              }
                         
             <Navbar 
-            back={true} 
+            back={"my_profile"} 
             backStyle={{ color: 'white' }} 
             title="My Account" titleStyle={{ color: 'white' }} 
             style={{ backgroundColor: '#79CBC5', marginBottom: "8px" }} />          
@@ -189,12 +197,12 @@ const validateName = (e) => {
                 <img className={styles.profileImage} src={data.profileURL}></img>
 
                 <InputField 
-                value={data.fullName}
+                value={data.name}
                 type = "text"
                 maxLength ="40"
                 placeholder="Enter your name"
                 error={fullNameError}
-                onChange={validateName}/>
+                onChange={(e)=>validateName(e)}/>
 
                 <InputField
                   value={data.phoneNumber}
@@ -202,11 +210,11 @@ const validateName = (e) => {
                   maxLength="10"
                   placeholder="Mobile Number"
                   error={phoneNumberError}
-                  onChange={validatePhNumber}/> 
+                  onChange={(e)=>validatePhoneNumber(e)}/> 
 
                 <div className={styles.filler}></div>                 
 
-                <button onClick={submit} className={styles.btn}>Save Changes</button>     
+                <button onClick={(e)=>submit(e)} className={styles.btn}>Save Changes</button>     
 
             </form>
 

@@ -31,15 +31,21 @@ const RequesterProfile=()=>{
             }
             axios.get('http://localhost:8000/requester/profile',options)
             .then(response => {
-                setData({
-                    fullName:response.data.fullName,
-                    phoneNumber:response.data.phoneNumber,
-                    address:response.data.address+","+response.data.city+","+response.data.pincoode,
-                    yearOfBirth:response.data.yearOfBirth,
-                    profileURL:response.data.profileURL
-                });
+                console.log(response);
+                if(response.data.status==="success"){
+                    setData({
+                        fullName:response.data.result.name,
+                        phoneNumber:response.data.result.phoneNumber,
+                        address:response.data.result.address+","+response.data.result.city+","+response.data.result.pincode ,
+                        yearOfBirth:response.data.result.yearOfBirth,
+                        profileURL:response.data.result.profileURL
+                    });
+                    setError(null)
+                }
+                else{
+                    setError(response.data.message)
+                }
                 setisLoaded(true);
-                setError(null)
             }, error => {
                 console.log("An error occured", error);
                 setError(error.toString());
@@ -61,7 +67,7 @@ const RequesterProfile=()=>{
             :
             <div className={styles.requesterProfileContainer}>
 
-            <Navbar back={true} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
+            <Navbar back={"/"} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
             
             <img src={data.profileURL} ></img>
 
@@ -93,7 +99,7 @@ const RequesterProfile=()=>{
                 text="EDIT"
                 fontSize="17px"
                 customClass={{letterSpacing:'1px'}}
-                onClick={history.push('/edit_profile')}
+                onClick={()=>history.push('edit_profile')}
             />           
 
         </div>

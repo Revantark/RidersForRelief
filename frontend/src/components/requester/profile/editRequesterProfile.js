@@ -16,7 +16,7 @@ const EditRequesterProfile = () => {
   const [isProfileUpdated, setisProfileUpdated] = useState(false);
 
   const [data, setData] = useState({
-    profilePhoto:"" ,
+    profilePhoto:"",
     fullName :"",
     phoneNumber:"",
     yearOfBirth:"",
@@ -26,7 +26,6 @@ const EditRequesterProfile = () => {
   });
 
   const [isLoaded, setisLoaded] = useState(false);
-  //const history = useHistory();
 
   const [fullNameError, setfullNameError] = useState(null);
   const [phoneNumberError, setphoneNumberError] = useState(null);
@@ -45,17 +44,23 @@ const EditRequesterProfile = () => {
         }
         axios.get('http://localhost:8000/requester/profile',options)
         .then(response => {
+          if(response.data.status==="success"){
+            console.log(response);
             setData({
-                fullName:response.data.fullName,
-                phoneNumber:response.data.phoneNumber,
-                address:response.data.address,
-                city:response.data.city,
-                pincode:response.data.pincoode,
-                yearOfBirth:response.data.yearOfBirth,
-                profileURL:response.data.profileURL
-            });
-            setisLoaded(true);
-            setRequestError(null);
+              fullName:response.data.result.name,
+              phoneNumber:response.data.result.phoneNumber,
+              address:response.data.result.address,
+              city:response.data.result.city,
+              pincode:response.data.result.pincode,
+              yearOfBirth:response.data.result.yearOfBirth,
+              profileURL:response.data.result.profileURL
+          });
+          setRequestError(null);
+          }
+          else{
+            setRequestError(response.data.message)
+          } 
+          setisLoaded(true);           
         }, error => {
             console.log("An error occured", error);
             setRequestError(error.toString());
@@ -76,14 +81,19 @@ const EditRequesterProfile = () => {
             'authorization': 'Bearer ' + token
         }
       }
-      axios.put('http://localhost:8000/requester/profile',data,{options})
+      axios.put('http://localhost:8000/requester/profile',data,options)
             .then(
               response => {
-                console.log(response);
-                setisLoaded(true);
-                setRequestError(null);
-                setisProfileUpdated(true);
-                showSnackBar();
+                if(response.data.status=="success"){
+                  console.log(response);
+                  setRequestError(null);
+                  setisProfileUpdated(true);
+                  showSnackBar();
+                }
+                else{
+                  throw Error(response.data.message)
+                }
+                setisLoaded(true)                
               })
             .catch((error)=>{              
             setRequestError(error.toString());
@@ -110,7 +120,6 @@ const EditRequesterProfile = () => {
       event.preventDefault();  
       if(validateAll()){
         updateProfile();
-
       }
       else{
         console.log("Update Failed");
@@ -317,7 +326,7 @@ const EditRequesterProfile = () => {
 
              }
 
-            <Navbar back={true} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
+            <Navbar back={"my_profile"} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
                         
             <form className={styles.editProfileForm} onSubmit={submit}>
                 
@@ -384,7 +393,7 @@ const EditRequesterProfile = () => {
                 </div>       
             </form>
               
-            <button onClick={submit} className="submit">Save Changes</button>
+            <button onClick={(e)=>submit(e)} className="submit">Save Changes</button>
 
         </div> 
         
