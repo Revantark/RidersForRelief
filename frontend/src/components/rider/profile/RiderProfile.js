@@ -61,12 +61,12 @@ const RiderProfile=()=>{
             
             <img className={styles.profileImage} src={data.profileUrl}></img>
             
-            <label>Full Name:</label>
+            <label className={styles.labelHead}>Full Name:</label>
             <span className={styles.name} >
                {data.name}
             </span>
             
-            <label>Phone Number:</label>
+            <label className={styles.labelHead}>Phone Number:</label>
             <span className={styles.phoneNumber}>
                {data.phoneNumber}
             </span>

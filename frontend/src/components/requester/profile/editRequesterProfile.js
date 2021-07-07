@@ -326,7 +326,7 @@ const EditRequesterProfile = () => {
 
              }
 
-            <Navbar back={"my_profile"} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
+            <Navbar back={"/"} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
                         
             <form className={styles.editProfileForm} onSubmit={submit}>
                 

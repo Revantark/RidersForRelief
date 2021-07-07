@@ -69,25 +69,25 @@ const RequesterProfile=()=>{
 
             <Navbar back={"/"} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
             
-            <img src={data.profileURL} ></img>
+            <img src={data.profileURL} className={styles.profileImage} ></img>
 
-            <label>Full Name</label>            
-            <span>
+            <label className={styles.labelHeader}>Full Name</label>            
+            <span  className={styles.dataContainer}>
             {data.fullName}
             </span>
 
-            <label>Phone Number</label>
-            <span >
+            <label className={styles.labelHeader}>Phone Number</label>
+            <span className={styles.dataContainer}>
             {data.phoneNumber}
             </span>
 
-            <label>Address</label>
-            <span>
+            <label className={styles.labelHeader}>Address</label>
+            <span className={styles.dataContainer}>
                 {data.address}
             </span>
 
-            <label>Year Of Birth</label>        
-            <span>
+            <label className={styles.labelHeader}>Year Of Birth</label>        
+            <span className={styles.dataContainer}>
                 {data.yearOfBirth}
             </span>
             

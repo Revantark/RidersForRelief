@@ -12,7 +12,7 @@ function profileRouting() {
                     <RequesterProfile/>
                 </Route>
 
-                <Route path="/edit_profile">
+                <Route path="/edit_profile" >
                     <EditRequesterProfile/>                
                 </Route>                
             </Switch>

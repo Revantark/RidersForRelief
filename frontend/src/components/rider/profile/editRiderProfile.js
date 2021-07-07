@@ -188,12 +188,12 @@ const validateName = (e) => {
              }
                         
             <Navbar 
-            back={"my_profile"} 
+            back={"/"} 
             backStyle={{ color: 'white' }} 
             title="My Account" titleStyle={{ color: 'white' }} 
             style={{ backgroundColor: '#79CBC5', marginBottom: "8px" }} />          
             
-            <form className={styles.form} onSubmit={submit}> 
+            <form className={styles.editRiderProfileForm} onSubmit={submit}> 
                 <img className={styles.profileImage} src={data.profileURL}></img>
 
                 <InputField 
