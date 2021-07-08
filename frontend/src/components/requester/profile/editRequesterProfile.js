@@ -4,13 +4,13 @@ import axios from 'axios'
 import styles from "./editRequesterProfile.module.css";
 import InputField from "../../global_ui/input";
 import Navbar from "../../global_ui/nav";
-import { useHistory } from 'react-router-dom';
 import {Dialog} from '../../global_ui/dialog/dialog';
 import TextArea from '../../global_ui/textarea/textArea';
 import {LoadingScreen} from '../../global_ui/spinner';
+import { useHistory } from 'react-router-dom';
 
 const EditRequesterProfile = () => {
-  const history = useHistory();
+  const history =useHistory()
   const token = localStorage.getItem('token')
   const [requestError, setRequestError] = useState(null);
   const [isProfileUpdated, setisProfileUpdated] = useState(false);
@@ -89,6 +89,7 @@ const EditRequesterProfile = () => {
                   setRequestError(null);
                   setisProfileUpdated(true);
                   showSnackBar();
+                  history.replace("/my_profile")
                 }
                 else{
                   throw Error(response.data.message)
@@ -326,7 +327,7 @@ const EditRequesterProfile = () => {
 
              }
 
-            <Navbar back={"/"} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
+            <Navbar back={"/my_profile"} backStyle={{ color: 'white' }} title="My Account" titleStyle={{ color: 'white' }} style={{ backgroundColor: '#79CBC5', marginBottom: "10px" }} />
                         
             <form className={styles.editProfileForm} onSubmit={submit}>
                 

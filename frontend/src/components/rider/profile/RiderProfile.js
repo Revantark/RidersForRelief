@@ -76,7 +76,7 @@ const RiderProfile=()=>{
              isRounded="true"
              text="EDIT"
              fontSize="17px"
-             onClick={()=>history.push('/edit_profile')}
+             onClick={()=>history.push('/my_profile/edit_profile')}
             />           
     
         </div>

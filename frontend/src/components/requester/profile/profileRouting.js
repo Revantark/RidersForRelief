@@ -1,23 +1,20 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom';
-import { BrowserRouter } from 'react-router-dom';
 import RequesterProfile from './RequesterProfile'
 import EditRequesterProfile from './editRequesterProfile'
 
-function profileRouting() {
+function ProfileRouting() {
     return (
-        <BrowserRouter basename="/home/requester/my_profile">
-            <Switch>
-                <Route exact path="/">
-                    <RequesterProfile/>
-                </Route>
+        <Switch>            
+            <Route path="/my_profile/edit_profile" >
+                <EditRequesterProfile/>                
+            </Route> 
 
-                <Route path="/edit_profile" >
-                    <EditRequesterProfile/>                
-                </Route>                
-            </Switch>
-        </BrowserRouter>
+            <Route path="/">
+                <RequesterProfile/>
+            </Route>               
+        </Switch>
     )
 }
 
-export default profileRouting
+export default ProfileRouting

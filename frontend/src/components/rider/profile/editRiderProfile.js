@@ -5,8 +5,10 @@ import InputField from "../../global_ui/input";
 import Navbar from "../../global_ui/nav";
 import {Dialog} from '../../global_ui/dialog/dialog';
 import {LoadingScreen} from '../../global_ui/spinner';
+import { useHistory } from "react-router";
 
 const EditRiderProfile = () => {
+  const history =useHistory();
 
   const [requestError, setRequestError] = useState(null);
   const token = localStorage.getItem('token');
@@ -25,7 +27,7 @@ const EditRiderProfile = () => {
   async function showSnackBar(){
     setTimeout(() => {
       setisProfileUpdated(false)
-    }, 2000);    
+    }, 3000);    
   }
 
   useEffect(
@@ -73,6 +75,7 @@ const EditRiderProfile = () => {
         setRequestError(null);
         setisProfileUpdated(true);
         showSnackBar();
+        history.replace("/my_profile")
       }
       else{
         setRequestError(response.data.message)
@@ -188,7 +191,7 @@ const validateName = (e) => {
              }
                         
             <Navbar 
-            back={"/"} 
+            back={"/my_profile"} 
             backStyle={{ color: 'white' }} 
             title="My Account" titleStyle={{ color: 'white' }} 
             style={{ backgroundColor: '#79CBC5', marginBottom: "8px" }} />          

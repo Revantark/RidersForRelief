@@ -99,7 +99,7 @@ const RequesterProfile=()=>{
                 text="EDIT"
                 fontSize="17px"
                 customClass={{letterSpacing:'1px'}}
-                onClick={()=>history.push('edit_profile')}
+                onClick={()=>history.push('/my_profile/edit_profile')}
             />           
 
         </div>
