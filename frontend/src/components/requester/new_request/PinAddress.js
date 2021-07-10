@@ -20,7 +20,7 @@ const PinAddress = () => {
       setPickup(state.isPickUp);
     }
   }, []);
-  
+
   const [pickup, setPickup] = useSessionStorageState("addressType", true);
 
   const routehandler = (route) => {
@@ -32,7 +32,7 @@ const PinAddress = () => {
   const [location, setlocation] = useSessionStorageState("address", {
     address: "",
     city: "",
-    pincode: "",
+    area: "",
   });
 
   const [errors, setErrors] = useState(() =>
@@ -40,13 +40,13 @@ const PinAddress = () => {
       ? {
           address: null,
           city: null,
-          pincode: null,
+          area: null,
           showErrors: false,
         }
       : {
           address: "Empty",
           city: "Empty",
-          pincode: "Empty",
+          area: "Empty",
           showErrors: false,
         }
   );
@@ -56,7 +56,7 @@ const PinAddress = () => {
 
     if (
       errors.city === null &&
-      errors.pincode === null &&
+      errors.area === null &&
       errors.address === null
     ) {
       //http request to be performed
@@ -68,12 +68,17 @@ const PinAddress = () => {
           setlocation({
             address: "",
             city: "",
-            pincode: "",
+            area: "",
           });
         }
         setPickup(false);
       } else {
-        dispatch({ type: "ADD_DROP_ADDRESS", payload: location });
+        dispatch({
+          type: "ADD_DROP_ADDRESS",
+          payload: location,
+          leftOffRoute:
+            requestType === "general" ? "confirm_general" : "confirm_pd",
+        });
         if (requestType === "general") {
           history.push("confirm_general");
         } else history.push("confirm_pd");
@@ -111,7 +116,6 @@ const PinAddress = () => {
     });
   };
 
-  
   const _handleCity = (e) => {
     const city = e.target.value;
     if (city === "") {
@@ -132,27 +136,27 @@ const PinAddress = () => {
     });
   };
 
-  const _handlePincode = (e) => {
-    const pincode = e.target.value;
+  const _handlearea = (e) => {
+    const area = e.target.value;
 
-    if (pincode.length === 0) {
+    if (area.length === 0) {
       setErrors({
         ...errors,
 
-        pincode: "Pincode must contain 6 digits",
+        area: "Area must not be empty",
       });
     } else {
       setErrors({
         ...errors,
-        pincode: null,
+        area: null,
       });
     }
     setlocation({
       ...location,
-      pincode: e.target.value,
+      area: area,
     });
   };
- console.log(uploadItemsList);
+  console.log(uploadItemsList);
   return (
     <div className={styles.chooseAddressPage}>
       <Navbar
@@ -208,9 +212,9 @@ const PinAddress = () => {
 
             <div className="childField">
               <InputField
-                value={location.pincode}
-                error={errors.showErrors ? errors.pincode : ""}
-                onChange={(e) => _handlePincode(e)}
+                value={location.area}
+                error={errors.showErrors ? errors.area : ""}
+                onChange={(e) => _handlearea(e)}
                 type="text"
                 placeholder="Area"
               />
@@ -229,17 +233,15 @@ const PinAddress = () => {
         </p>
 
         <div style={{ marginBottom: 1.3 + "em" }}>
-          
-            <button
-              type="button"
-              onClick={() => routehandler("map_location")}
-              value="Choose Location"
-              className={styles.locationBtn}
-            >
-              <i className="fas fa-search-location" id="locationIcon"></i>
-              Choose Location
-            </button>
-          
+          <button
+            type="button"
+            onClick={() => routehandler("map_location")}
+            value="Choose Location"
+            className={styles.locationBtn}
+          >
+            <i className="fas fa-search-location" id="locationIcon"></i>
+            Choose Location
+          </button>
         </div>
 
         <button

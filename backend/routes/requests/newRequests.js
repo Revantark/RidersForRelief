@@ -41,14 +41,16 @@ const storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 
-router.post('/newRequest/pd', upload.any('images'), (req, res) => {
+router.post('/new', upload.any('images'), (req, res) => {
     let currentReqTime = Date.now();
+	let requesterID;
     console.log(currentReqTime);
     requester.findOne({ phoneNumber: req.user.phoneNumber })
         .then(doc => {
             if (doc != null) {
                 //Fetch last request time here
             }
+			requesterID = doc._id;
             return 16273927;
         })
         .then(value => {
@@ -67,20 +69,20 @@ router.post('/newRequest/pd', upload.any('images'), (req, res) => {
         .then(paths => {
             console.log(req.body);
             let newRequest = new requestModel({
-                requesterID: requesterId,
+                requesterID: requesterID,
                 requestNumber: Date.now() + Math.floor(Math.random() * 100),
                 requesterCovidStatus: req.body.requesterCovidStatus,
                 noContactDelivery: req.body.noContactDelivery, // Added no contact delivery
-                requestStatus: req.body.requestStatus,
+                requestStatus: "PENDING",
                 requestType: 'P&D',
                 itemsListImages: paths,
                 itemsListList: JSON.parse(req.body.itemsListList),
                 itemCategories: req.body.itemCategories,
-                Remarks: req.body.Remarks,
-                dropLocationCoordinates: { coordinates: req.body.dropLocationCoordinates },
-                dropLocationAddress: req.body.dropLocationAddress,
-                pickupLocationCoordinates: { coordinates: req.body.pickupLocationCoordinates },
-                pickupLocationAddress: req.body.pickupLocationAddress,
+                remarks: req.body.remarks,
+                dropLocationCoordinates: { coordinates: JSON.parse(req.body.dropLocationCoordinates) },
+                dropLocationAddress: JSON.parse(req.body.dropLocationAddress),
+                pickupLocationCoordinates: { coordinates: JSON.parse(req.body.pickupLocationCoordinates) },
+                pickupLocationAddress: JSON.parse(req.body.pickupLocationAddress),
 
             });
             return newRequest.save()

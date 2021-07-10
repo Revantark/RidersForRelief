@@ -6,6 +6,7 @@ import Navbar from "../../global_ui/nav";
 import { useHistory } from "react-router-dom";
 import { useContext } from "react";
 import { NewRequestContext } from "../../context/new_request/newRequestProvider";
+import imageCompression from 'browser-image-compression';
 
 const uploadImages = () => {
   const [err, setErr] = useState({
@@ -15,61 +16,63 @@ const uploadImages = () => {
   const [imgSrcs, setImgSrcs] = useSessionStorageState("uploaded_images", []);
   const { dispatch } = useContext(NewRequestContext);
 
-  const [categories, setcategories] = useSessionStorageState("tags", {Medicine:false,Grocery:false,Misc:false});
+  const [categories, setcategories] = useSessionStorageState("tags", {
+    MEDICINES: false,
+    GROCERIES: false,
+    MISC: false,
+  });
   const history = useHistory();
 
   const onInputChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.type.slice(0, 5) !== "image") {
+    const rawImageFile = e.target.files[0];
+    if (!rawImageFile) return;
+    if (rawImageFile.type.slice(0, 5) !== "image") {
       setErr({ ...err, input: "Please select an image file" });
     } else {
+      const options = {
+        maxSizeMB: 0.15,
+        useWebWorker: true
+      }
+      const file = await imageCompression(rawImageFile, options);
+      console.log(rawImageFile);
       const src = URL.createObjectURL(file);
       setImgSrcs((images) => [...images, src]);
       document.getElementById("file").value = null;
     }
-
+    
+    
     
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if(imgSrcs.length === 0 ){
+    if (imgSrcs.length === 0) {
       setErr({
         ...err,
-        input:'Please select an image'
-      })
-    }else {
-      
-      if(categories.Medicine || categories.Misc || categories.Grocery){
-        let list = []
-        for(const cat in categories){
-          if(categories[cat])
-            list.push(cat)
+        input: "Please select an image",
+      });
+    } else {
+      if (categories.MEDICINES || categories.MISC || categories.GROCERIES) {
+        let list = [];
+        for (const cat in categories) {
+          if (categories[cat]) list.push(cat);
         }
-        dispatch({type:"ADD_CATEGORIES_IMAGES",payload:list})
-        history.push('address')
-
-      }else{
+        dispatch({ type: "ADD_CATEGORIES_IMAGES", payload: list,leftOffRoute:'address' });
+        history.push("address");
+      } else {
         setErr({
           ...err,
-          check:'Please select a category'
-        })
+          check: "Please select a category",
+        });
       }
-      
     }
-
-    
   };
 
   const OnCheckBox = (e) => {
-    
-      let data = {...categories}
-      data[e.target.name]=e.target.checked
-      
-      setcategories(data)
-   
-    
+    let data = { ...categories };
+    data[e.target.name] = e.target.checked;
+
+    setcategories(data);
   };
 
   const onCancel = () => {
@@ -143,37 +146,22 @@ const uploadImages = () => {
         <div className={styles.up_list}>
           <div>
             <label className={styles.up_check_label}>
-              Medicine
-              <input
-                type="checkbox"
-                name="Medicine"
-                
-                onChange={OnCheckBox}
-              />
+              MEDICINES
+              <input type="checkbox" name="MEDICINES" onChange={OnCheckBox} />
               <span className={`${styles.up_check} ${styles.check_1}`}></span>
             </label>
           </div>
           <div>
             <label className={styles.up_check_label}>
-              Grocery
-              <input
-                type="checkbox"
-                name="Grocery"
-                
-                onChange={OnCheckBox}
-              />
+              GROCERIES
+              <input type="checkbox" name="GROCERIES" onChange={OnCheckBox} />
               <span className={`${styles.up_check} ${styles.check_2}`}></span>
             </label>
           </div>
           <div>
             <label className={styles.up_check_label}>
-              Misc.
-              <input
-                type="checkbox"
-                name="Misc"
-                
-                onChange={OnCheckBox}
-              />
+              MISC.
+              <input type="checkbox" name="MISC" onChange={OnCheckBox} />
               <span className={`${styles.up_check} ${styles.check_3}`}></span>
             </label>
           </div>
