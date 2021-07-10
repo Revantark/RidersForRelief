@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import styles from "./Upload_images.module.css";
-import { useSessionStorageState } from "../../../utils/useLocalStorageState";
+import {  useSessionStorageState } from "../../../utils/useLocalStorageState";
 import Navbar from "../../global_ui/nav";
 import { useHistory } from "react-router-dom";
 import { useContext } from "react";
@@ -30,13 +30,16 @@ const uploadImages = () => {
       setErr({ ...err, input: "Please select an image file" });
     } else {
       const options = {
-        maxSizeMB: 0.15,
+        maxSizeMB: 0.1,
         useWebWorker: true
       }
       const file = await imageCompression(rawImageFile, options);
-      console.log(rawImageFile);
-      const src = URL.createObjectURL(file);
-      setImgSrcs((images) => [...images, src]);
+      let reader = new FileReader()
+      reader.onloadend = function(){
+        setImgSrcs((images) => [...images, reader.result]);
+
+      }
+      reader.readAsDataURL(file)
       document.getElementById("file").value = null;
     }
     
@@ -57,7 +60,7 @@ const uploadImages = () => {
         for (const cat in categories) {
           if (categories[cat]) list.push(cat);
         }
-        dispatch({ type: "ADD_CATEGORIES_IMAGES", payload: list,leftOffRoute:'address' });
+        dispatch({ type: "ADD_CATEGORIES_IMAGES", payload: list });
         history.push("address");
       } else {
         setErr({
@@ -88,11 +91,8 @@ const uploadImages = () => {
   return (
     <>
       <Navbar
-        style={{ backgroundColor: "#79CBC5", marginBottom: "10px" }}
         back="list_type"
-        backStyle={{ color: "white" }}
         title="Upload Images"
-        titleStyle={{ color: "white" }}
       />
 
       <div className={styles.content_up}>
@@ -117,9 +117,7 @@ const uploadImages = () => {
           </div>
         </label>
 
-        {/* <div className={styles.up_img_preview}>         
-             <Display previewImages={preview}/>             
-             </div> */}
+      
 
         <div className={styles.up_img_preview}>
           {imgSrcs.map((image, index) => {

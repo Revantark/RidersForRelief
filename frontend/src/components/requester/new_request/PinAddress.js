@@ -15,10 +15,19 @@ const PinAddress = () => {
   const {
     location: { state },
   } = history;
+
   useEffect(() => {
     if (state) {
+      if (state.isPickUp) {
+        setlocation(pickupLocation);
+      } else {
+        setlocation(dropLocation);
+      }
+
       setPickup(state.isPickUp);
     }
+    // }else if(requestType === 'p&d') setlocation(pickupLocation)
+    // else if(dropLocation) setlocation(dropLocation)
   }, []);
 
   const [pickup, setPickup] = useSessionStorageState("addressType", true);
@@ -26,43 +35,34 @@ const PinAddress = () => {
   const routehandler = (route) => {
     const p = pickup;
     setPickup(false);
-    history.push(route, { isPickUp: p });
+    history.push(route + "/" + p);
   };
 
-  const [location, setlocation] = useSessionStorageState("address", {
+  const [location, setlocation] = useState({
     address: "",
     city: "",
     area: "",
   });
 
-  const [errors, setErrors] = useState(() =>
-    sessionStorage.getItem("address")
-      ? {
-          address: null,
-          city: null,
-          area: null,
-          showErrors: false,
-        }
-      : {
-          address: "Empty",
-          city: "Empty",
-          area: "Empty",
-          showErrors: false,
-        }
-  );
+  const [errors, setErrors] = useState({
+    address: "Enter address",
+    city: "Enter city",
+    area: "Enter area",
+    showErrors: false,
+  });
 
   function submit(event) {
     event.preventDefault();
-
+    console.log(location);
     if (
-      errors.city === null &&
-      errors.area === null &&
-      errors.address === null
+      location.city !== "" &&
+      location.area !== "" &&
+      location.address !== ""
     ) {
       //http request to be performed
       if (pickup && requestType === "p&d") {
         dispatch({ type: "ADD_PICKUP_ADDRESS", payload: location });
-        if (dropLocation) {
+        if (Object.keys(dropLocation).length !== 0) {
           setlocation(dropLocation);
         } else {
           setlocation({
@@ -76,38 +76,29 @@ const PinAddress = () => {
         dispatch({
           type: "ADD_DROP_ADDRESS",
           payload: location,
-          leftOffRoute:
-            requestType === "general" ? "confirm_general" : "confirm_pd",
         });
         if (requestType === "general") {
           history.push("confirm_general");
         } else history.push("confirm_pd");
       }
-    }
-    setErrors({
-      ...errors,
-      showErrors: true,
-    });
+    } else
+      setErrors({
+        ...errors,
+        showErrors: true,
+      });
   }
 
   const _handleAddress = (e) => {
     const address = e.target.value;
-    const regE = /^[A-Za-z0-9'\-\s]*$/;
     if (address === "") {
       setErrors({
         ...errors,
-
         address: "Please enter your address",
-      });
-    } else if (!regE.test(address)) {
-      setErrors({
-        ...errors,
-        address: "Please enter a valid address",
       });
     } else {
       setErrors({
         ...errors,
-        address: null,
+        address: "",
       });
     }
     setlocation({
@@ -127,7 +118,7 @@ const PinAddress = () => {
     } else {
       setErrors({
         ...errors,
-        city: null,
+        city: "",
       });
     }
     setlocation({
@@ -148,7 +139,7 @@ const PinAddress = () => {
     } else {
       setErrors({
         ...errors,
-        area: null,
+        area: "",
       });
     }
     setlocation({
@@ -156,7 +147,6 @@ const PinAddress = () => {
       area: area,
     });
   };
-  console.log(uploadItemsList);
   return (
     <div className={styles.chooseAddressPage}>
       <Navbar
