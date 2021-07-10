@@ -12,7 +12,7 @@ import {Dialog} from '../../global_ui/dialog/dialog';
 const RequesterProfile=()=>{
     const history = useHistory();
     const [data, setData] = useState({
-        fullName:'',
+        name:'',
         phoneNumber:'',
         address:'',
         yearOfBirth:'',
@@ -34,11 +34,11 @@ const RequesterProfile=()=>{
                 console.log(response);
                 if(response.data.status==="success"){
                     setData({
-                        fullName:response.data.result.name,
-                        phoneNumber:response.data.result.phoneNumber,
-                        address:response.data.result.address+","+response.data.result.city+","+response.data.result.pincode ,
-                        yearOfBirth:response.data.result.yearOfBirth,
-                        profileURL:response.data.result.profileURL
+                        name:response.data.message.name,
+                        phoneNumber:response.data.message.phoneNumber,
+                        address:response.data.message.defaultAddress.address+","+response.data.message.defaultAddress.area+","+response.data.message.defaultAddress.city ,
+                        yearOfBirth:response.data.message.yearOfBirth,
+                        profileURL:response.data.message.profileURL
                     });
                     setError(null)
                 }
@@ -73,7 +73,7 @@ const RequesterProfile=()=>{
 
             <label className={styles.labelHeader}>Full Name</label>            
             <span  className={styles.dataContainer}>
-            {data.fullName}
+            {data.name}
             </span>
 
             <label className={styles.labelHeader}>Phone Number</label>

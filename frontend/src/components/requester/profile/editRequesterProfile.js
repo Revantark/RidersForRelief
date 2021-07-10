@@ -17,11 +17,11 @@ const EditRequesterProfile = () => {
 
   const [data, setData] = useState({
     profilePhoto:"",
-    fullName :"",
+    name :"",
     phoneNumber:"",
     yearOfBirth:"",
     defaultAddress: {
-      addressLine:"",
+      address:"",
       city:"",
       area:""
     },
@@ -50,15 +50,15 @@ const EditRequesterProfile = () => {
           if(response.data.status==="success"){
             console.log(response);
             setData({
-              fullName:response.data.result.name,
-              phoneNumber:response.data.result.phoneNumber,
+              name:response.data.message.name,
+              phoneNumber:response.data.message.phoneNumber,
               defaultAddress: {
-                addressLine:response.data.result.defaultAddress.addressLine,
-                city: response.data.result.defaultAddress.city,
-                area:response.data.result.defaultAddress.area
+                address:response.data.message.defaultAddress.address,
+                city: response.data.message.defaultAddress.city,
+                area:response.data.message.defaultAddress.area
               },
-              yearOfBirth:parseInt(response.data.result.yearOfBirth),
-              profileURL:response.data.result.profileURL
+              yearOfBirth:parseInt(response.data.message.yearOfBirth),
+              profileURL:response.data.message.profileURL
           });
           setRequestError(null);
           }
@@ -103,11 +103,11 @@ const EditRequesterProfile = () => {
         const d=data;
         if(
           validateCity({target:{value:d.defaultAddress.city}})& 
-          validateName({target:{value:d.fullName}})&
+          validateName({target:{value:d.name}})&
           validateArea({target:{value:d.defaultAddress.area}})&
           validateYear({target:{value:d.yearOfBirth}})&
           validatePhNumber({target:{value:d.phoneNumber}})&
-          validateAddress({target:{value:d.defaultAddress.addressLine}})
+          validateAddress({target:{value:d.defaultAddress.address}})
         ){
           return true
         }
@@ -184,7 +184,7 @@ const EditRequesterProfile = () => {
       }      
       setData({
         ...data,
-        fullName: e.target.value,
+        name: e.target.value,
       });
       return flag;
     };
@@ -208,7 +208,7 @@ const EditRequesterProfile = () => {
           ...data,
           defaultAddress:{
             ...data.defaultAddress,
-            addressLine:e.target.value
+            address:e.target.value
           }           
       })
       return flag;
@@ -335,7 +335,7 @@ const EditRequesterProfile = () => {
                 <img className={styles.profileImage} src={data.profilePhoto}></img>
 
                 <InputField                 
-                value={data.fullName}
+                value={data.name}
                 type = "text"
                 maxLength ="40"
                 placeholder="Name"
@@ -364,7 +364,7 @@ const EditRequesterProfile = () => {
                 <div className={styles.address}>
                     <div className={styles.completeAddress}>
                         <TextArea                
-                        value={data.defaultAddress.addressLine}
+                        value={data.defaultAddress.address}
                         placeholder="Address"
                         rows="3"
                         onChange={validateAddress}
