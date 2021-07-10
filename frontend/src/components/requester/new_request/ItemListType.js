@@ -2,46 +2,31 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import ItemListTypeCSS from "./ItemListType.module.css";
 import Navbar from "../../global_ui/nav";
-import { useContext } from "react/cjs/react.development";
-import { NewRequestContext } from "../../context/new_request/newRequestProvider";
 
 function ListType() {
   const history = useHistory();
-  const {dispatch} = useContext(NewRequestContext)
   const routehandler = (route) => {
-    dispatch({type:"LEFT_OFF_ROUTE",payload:route})
     history.push(route);
   };
 
   return (
-    <div>
-      <div className={"row"}>
-        <Navbar
-          back="/new_request"
-          backStyle={{ color: "white" }}
-          title="New Request"
-          titleStyle={{ color: "white" }}
-          style={{ backgroundColor: "#79CBC5", marginBottom: "10px" }}
-        />
-      </div>
+    <div style={{height:'100vh'}}>
+      <Navbar back="/new_request" title="New Request" />
+
       <div className={ItemListTypeCSS.container}>
         <span className={ItemListTypeCSS.headText}>
           Please choose the items you want to request
         </span>
         <button
           onClick={() => routehandler("add_image")}
-          style={{ alignSelf: "center" }}
-          className={ItemListTypeCSS.btnUpload1}
         >
-          <span className={ItemListTypeCSS.btnUploadText}>Upload Image</span>
+          Upload Image
         </button>
-        <span className={ItemListTypeCSS.choice}>or</span>
+        <span className={ItemListTypeCSS.headText}>or</span>
         <button
           onClick={() => routehandler("enter_items")}
-          style={{ alignSelf: "center" }}
-          className={ItemListTypeCSS.btnUpload2}
         >
-          <span className={ItemListTypeCSS.btnUploadText}>Enter Items</span>
+          Enter Items
         </button>
       </div>
     </div>
