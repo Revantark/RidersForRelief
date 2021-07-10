@@ -46,6 +46,7 @@ const EditRequesterProfile = () => {
         }
         axios.get('http://localhost:8000/requester/profile',options)
         .then(response => {
+          console.log(response);
           if(response.data.status==="success"){
             console.log(response);
             setData({
