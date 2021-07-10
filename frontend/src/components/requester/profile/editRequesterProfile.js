@@ -21,7 +21,7 @@ const EditRequesterProfile = () => {
     phoneNumber:"",
     yearOfBirth:"",
     defaultAddress: {
-      addressLine:"",
+      address:"",
       city:"",
       area:""
     },
@@ -53,7 +53,7 @@ const EditRequesterProfile = () => {
               name:response.data.message.name,
               phoneNumber:response.data.message.phoneNumber,
               defaultAddress: {
-                addressLine:response.data.message.defaultAddress.addressLine,
+                address:response.data.message.defaultAddress.address,
                 city: response.data.message.defaultAddress.city,
                 area:response.data.message.defaultAddress.area
               },
@@ -107,7 +107,7 @@ const EditRequesterProfile = () => {
           validateArea({target:{value:d.defaultAddress.area}})&
           validateYear({target:{value:d.yearOfBirth}})&
           validatePhNumber({target:{value:d.phoneNumber}})&
-          validateAddress({target:{value:d.defaultAddress.addressLine}})
+          validateAddress({target:{value:d.defaultAddress.address}})
         ){
           return true
         }
@@ -208,7 +208,7 @@ const EditRequesterProfile = () => {
           ...data,
           defaultAddress:{
             ...data.defaultAddress,
-            addressLine:e.target.value
+            address:e.target.value
           }           
       })
       return flag;
@@ -364,7 +364,7 @@ const EditRequesterProfile = () => {
                 <div className={styles.address}>
                     <div className={styles.completeAddress}>
                         <TextArea                
-                        value={data.defaultAddress.addressLine}
+                        value={data.defaultAddress.address}
                         placeholder="Address"
                         rows="3"
                         onChange={validateAddress}
