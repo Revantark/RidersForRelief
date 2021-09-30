@@ -14,7 +14,7 @@ var path = require("path");
 const adminRouter = require("./routes/adminRouter");
 const riderRouter = require("./routes/riderRouter");
 const verify_token = require("./routes/verify_token/verify_token");
-
+console.log(process.env.MONGO_PASSWORD)
 mongoose.set('useFindAndModify', false);
 mongoose.connect(`mongodb+srv://admin:${process.env.MONGO_PASSWORD}@cluster0.xgkw0.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true });
 
