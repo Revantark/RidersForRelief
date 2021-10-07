@@ -130,7 +130,7 @@ function Map() {
 
       <LoadScript
         libraries={libraries}
-        googleMapsApiKey={process.env.REACT_APP_GMAP_API_KEY}
+        googleMapsApiKey={process.env.REACT_APP_GMAPS_API_KEY}
       >
         <GoogleMap
           onClick={(e) => _handleMarker(e.latLng)}
